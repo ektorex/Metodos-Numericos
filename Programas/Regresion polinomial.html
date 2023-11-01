@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Regresion polinomial</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <nav>
+        <input type="checkbox" id="check">
+        <label for="check" class="checkbtn">
+            <i class="fas fa-bars"></i>
+        </label>
+        <a href="#" class="enlace">
+            <img src="logo.png" alt="HRL" class="logo">
+        </a>
+        <ul>
+          <li><a href="../index.html">Integrantes</a></li>
+            <li><a href="prrr.html">Newton</a></li>
+            <li><a href="lagrange.html">Lagrange</a></li>
+            <li><a href="Regresion lineal.html">Reg. lineal</a></li>
+            <li><a class="active" href="#">Reg. polinomial</a></li>
+            <li><a href="Gauss.html">Gauss</a></li>
+            <li><a href="gauss - seidel.html">Gauss - seidel</a></li>
+          
+
+        </ul>
+    </nav>
+
+
+
+
+    <section>
+<div class="titulo"> Regresion polinomial  </div>
+
+<div class="form">
+    <form  autocomplete="off">
+        <input type="text" name="x" id="xEl" > 
+        <label class="lbl"> <span class="txt">X</span> </label>
+       
+        <input type="text" name="fx" id="fxEl" >
+        <label class="lbl" > <span class="txt">FX</span> </label>
+    
+        <button>ingresar valores</button>
+    </form>
+</div>
+
+<table>
+  <thead>
+    <tr>
+      <th>x</th>
+      <th>fx</th>
+    </tr>  
+  </thead>
+  <tbody>
+  
+
+  </tbody>
+</table>
+
+
+<div class="bus">
+    <input type="text" name="x" id="xb" placeholder="x bus" size="10" autocomplete="off">
+    <button onclick="calcular()">calcular</button>
+
+
+  </div>
+
+<style>
+
+.titulo{
+    display: flex;
+    justify-content: center;
+    font-family: 'Times New Roman', Times, serif;
+    font-size: xx-large;
+}
+
+.form{
+    display: flex;
+    justify-content: center;
+}
+
+.form input{
+    border: none;
+    outline: none;
+}
+
+
+table,
+  form {
+    width: 500px;
+    margin: 20px auto;
+  }
+  table {
+    border-collapse: collapse;
+    text-align: center;
+    background-color: rgba(255, 255, 255, .75);
+  }
+  table td,
+  table th {
+    border: solid 1px white;
+  }
+
+  table td{
+    color: rgb(59, 59, 59);
+  }
+
+  .bus{
+    display: flex;
+    justify-content: center;
+  }
+
+</style>
+
+
+<script type="text/javascript">
+
+const form = document.querySelector('form');
+const tbodyEl = document.querySelector('tbody');
+const tableEl = document.querySelector('table');
+
+var n = -1;
+var w = 0;
+var h = 0;
+var p = 1;
+
+function captura(e){
+
+    e.preventDefault();
+
+    const xEl = parseFloat(document.getElementById("xEl").value)
+    const fxEl = parseFloat(document.getElementById("fxEl").value)
+
+    tbodyEl.innerHTML += `
+        <tr>
+            <td id="x${w}">${xEl}</td>
+            <td id="fx${w}">${fxEl}</td>
+         </tr>
+    `;
+    h=h+2
+    p=p+2
+ 
+}
+
+form.addEventListener("submit", captura);
+
+ function calcular(){
+    var xb = parseFloat(document.getElementById("xb").value);
+        
+    const valores = document.getElementsByTagName("td");
+
+    let X = [
+    ]
+    let fX = [ 
+    ]
+
+    let q = 0
+    while (q < h){ 
+    X.push(Number(valores[q].innerHTML))
+    q=q+2
+    }
+   
+   
+    let t = 1
+    while (t < p){ 
+    fX.push(Number(valores[t].innerHTML))
+    t=t+2
+    }
+
+    const acumular = (acumulador,numero) => acumulador + numero;
+    let sumX = X.reduce(acumular,0);
+    let sumfX = fX.reduce(acumular,0);
+  
+    let Xcuad = X.map(function(Q){
+        return Q * Q
+    })
+    let sumXcuad = Xcuad.reduce(acumular,0);
+  
+    let Xcub = X.map(function(Q){
+        return Q * Q * Q
+    })
+    let sumXcub = Xcub.reduce(acumular,0);
+
+    let Xtet = X.map(function(Q){
+        return Q * Q * Q * Q
+    })
+    let sumXtet = Xtet.reduce(acumular,0);
+
+
+    let XfX = []
+    let r = 0
+    while (r < X.length){ 
+    XfX.push(X[r] * fX[r])
+    r++
+    }
+    let sumXfX = XfX.reduce(acumular,0);
+
+    let XcuadfX = []
+    let d = 0
+    while (d < Xcuad.length){ 
+    XcuadfX.push(Xcuad[d] * fX[d])
+    d++
+    }
+    let sumXcuadfX = XcuadfX.reduce(acumular,0);
+
+
+    function gaussElimination(A, b) {
+  var n = A.length;
+  for (var i = 0; i < n; i++) {
+    
+    var maxRow = i;
+    for (var j = i + 1; j < n; j++) {
+      if (Math.abs(A[j][i]) > Math.abs(A[maxRow][i])) {
+        maxRow = j;
+      }
+    }
+    
+    var temp = A[i];
+    A[i] = A[maxRow];
+    A[maxRow] = temp;
+    var tempB = b[i];
+    b[i] = b[maxRow];
+    b[maxRow] = tempB;
+    
+    for (var j = i + 1; j < n; j++) {
+      var factor = A[j][i] / A[i][i];
+      for (var k = i + 1; k < n; k++) {
+        A[j][k] -= factor * A[i][k];
+      }
+      b[j] -= factor * b[i];
+    }
+  }
+  
+  var x = new Array(n);
+  for (var i = n - 1; i >= 0; i--) {
+    var sum = 0;
+    for (var j = i + 1; j < n; j++) {
+      sum += A[i][j] * x[j];
+    }
+    x[i] = (b[i] - sum) / A[i][i];
+  }
+  return x;
+}
+
+
+var A = [[X.length, sumX, sumXcuad], [sumX, sumXcuad, sumXcub], [sumXcuad, sumXcub, sumXtet]];
+var b = [sumfX, sumXfX, sumXcuadfX];
+var x = gaussElimination(A, b);
+
+
+
+/*
+    let Ds = ((X.length * sumXcuad * sumXtet) + (sumX * sumXcub * sumXcuad) + (sumXcuad * sumX * sumXcub)) - ((sumX * sumX * sumXtet) + (X.length * sumXcub * sumXcub) + (sumXcuad * sumXcuad * sumXcuad))
+
+    let Dx = ((sumfX * sumXcuad * sumXtet) + (sumXfX * sumXcub * sumXcuad) + (sumXcuadfX * sumX * sumXtet)) - ((sumXfX * sumX * sumXtet) + (sumfX * sumXcub * sumXcub) + (sumXcuadfX * sumXcuad * sumXcuad))
+
+    let Dy = ((X.length * sumXfX * sumXtet) + (sumX * sumXcuadfX * sumXcuad) + (sumXcuad * sumfX * sumXtet)) - ((sumX * sumfX * sumXtet) + (X.length * sumXcuadfX * sumXcub) + (sumXcuad * sumXfX * sumXcuad))
+    
+    let Dz = ((X.length * sumXcuad * sumXcuadfX) + (sumX * sumXcub * sumfX) + (sumXcuad * sumX * sumXfX)) - ((sumX * sumX * sumXcuadfX) + (X.length * sumXcub * sumXfX) + (sumXcuad * sumXcuad * sumX))
+ 
+    let b1 = Dx / Ds
+    let b2 = Dy / Ds
+    let b3 = Dz / Ds
+*/
+
+
+    let Y = x[0] + (x[1] * xb) + (x[2] * (xb * xb)) 
+
+    
+    alert(Y)
+   
+    
+ }
+
+</script>
+
+
+
+
+
+    </section>
+</body>
+</html>

@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gauss</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <nav>
+        <input type="checkbox" id="check">
+        <label for="check" class="checkbtn">
+            <i class="fas fa-bars"></i>
+        </label>
+        <a href="#" class="enlace">
+            <img src="logo.png" alt="micola" class="logo">
+        </a>
+        <ul>
+            <li><a href="../index.html">Integrantes</a></li>
+            <li><a href="prrr.html">Newton</a></li>
+            <li><a href="lagrange.html">Lagrange</a></li>
+            <li><a href="Regresion lineal.html">Reg. lineal</a></li>
+            <li><a href="Regresion polinomial.html">Reg. polinomial</a></li>
+            <li><a href="Gauss.html">Gauss</a></li>
+            <li><a class="active" href="#">Gauss - seidel</a></li>
+           
+
+        </ul>
+    </nav>
+    <section>
+
+
+      <body>
+
+
+
+        <form class="form" autocomplete="off">
+            
+          <div class="cuad">         
+            <input type="number" name="x" id="x1" placeholder="x" size="10">
+            <input type="number" name="y" id="y1" placeholder="y" size="10">
+            <input type="number" name="z" id="z1" placeholder="z" size="10">
+
+            <input type="number" name="s" id="s1" placeholder="s" size="10">
+      
+            <input type="number" name="x" id="x2" placeholder="x" size="10">
+            <input type="number" name="y" id="y2" placeholder="y" size="10">
+            <input type="number" name="z" id="z2" placeholder="z" size="10">
+
+            <input type="number" name="s" id="s2" placeholder="s" size="10">
+
+            <input type="number" name="x" id="x3" placeholder="x" size="10">
+            <input type="number" name="y" id="y3" placeholder="y" size="10">
+            <input type="number" name="z" id="z3" placeholder="z" size="10">
+
+            <input type="number" name="s" id="s3" placeholder="s" size="10">
+
+
+            <button type="button" onclick="captura()">Resolver</button>
+
+            <input class="res" type="number" name="xb" id="xb" placeholder="X" size="10" readonly>
+            <input class="res" type="number" name="yb" id="yb" placeholder="Y" size="10" readonly>
+            <input class="res" type="number" name="zb" id="zb" placeholder="Z" size="10" readonly>
+
+          </div>
+        </form>
+    
+    
+    
+    
+        <style>
+    
+    
+
+    .cuad {
+        display: grid;
+        justify-content: center;
+        align-content: center;
+        height: calc(100vh - 80px);
+        grid-template-columns: repeat(4,100px);
+        grid-template-rows: repeat(5,100px);   
+        font-size: 2rem;
+        outline: none;
+        color: black;
+    }
+    
+    .form input, button{
+        outline: none;
+        color: rgb(59, 59, 59);
+        border: 1px solid white;
+        cursor: pointer;
+        font-size: 1.4rem;
+        font-family: 'Times New Roman', Times, serif;
+        text-align: center;
+        background-color: rgba(255, 255, 255, .75);
+    }
+
+    .form input:hover, button:hover {
+
+        background-color: rgba(255, 255, 255, .9);
+
+    }
+
+    
+
+        </style>
+    
+    
+    
+    
+        <script type="text/javascript">
+            
+    function captura(){
+
+        let x1 = document.getElementById("x1").value;
+        let x2 = document.getElementById("x2").value;
+        let x3 = document.getElementById("x3").value;
+        
+        let y1 = document.getElementById("y1").value;
+        let y2 = document.getElementById("y2").value;
+        let y3 = document.getElementById("y3").value;
+
+        let z1 = document.getElementById("z1").value;
+        let z2 = document.getElementById("z2").value;
+        let z3 = document.getElementById("z3").value;
+
+        let s1 = document.getElementById("s1").value;
+        let s2 = document.getElementById("s2").value;
+        let s3 = document.getElementById("s3").value;
+        
+
+        function gaussSeidel(A, b, x0, itemax, tole) {
+  const n = A.length;
+  let x = x0.slice();
+
+  for (let k = 0; k < itemax; k++) {
+    let maxError = 0;
+    for (let i = 0; i < n; i++) {
+      let sigma = 0;
+      for (let j = 0; j < n; j++) {
+        if (i !== j) {
+          sigma += A[i][j] * x[j];
+        }
+      }
+
+      const xi = (b[i] - sigma) / A[i][i];
+      const error = Math.abs(xi - x[i]);
+      maxError = Math.max(maxError, error);
+      x[i] = xi;
+    }
+
+    if (maxError < tole) {
+      alert(`convergencia a las ${k + 1} iteraciones`);
+      return x;
+    }
+  }
+
+  alert(`No hay convergensia a las ${itemax} iteraciones`);
+  return x;
+}
+
+
+const A = [[x1, y1, z1], [x2, y2, z2], [x3, y3, z3]];
+const b = [s1, s2, s3];
+
+const x0 = [0, 0, 0];
+const itemax = 100;
+const tole = 1e-6;
+
+const x = gaussSeidel(A, b, x0, itemax, tole);
+
+
+document.getElementById("xb").value = x[0]
+document.getElementById("yb").value = x[1]
+document.getElementById("zb").value = x[2]
+
+
+    }
+    
+        </script>
+    
+    
+        
+    </body>
+
+
+
+
+    </section>
+</body>
+</html>

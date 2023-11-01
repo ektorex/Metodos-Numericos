@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Regresion lineal</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <nav>
+        <input type="checkbox" id="check">
+        <label for="check" class="checkbtn">
+            <i class="fas fa-bars"></i>
+        </label>
+        <a href="#" class="enlace">
+            <img src="logo.png" alt="HRL" class="logo">
+        </a>
+        <ul>
+          <li><a href="../index.html">Integrantes</a></li>
+            <li><a href="prrr.html">Newton</a></li>
+            <li><a href="lagrange.html">Lagrange</a></li>
+            <li><a class="active" href="#">Reg. lineal</a></li>
+            <li><a href="Regresion polinomial.html">Reg. polinomial</a></li>
+            <li><a href="Gauss.html">Gauss</a></li>
+            <li><a href="gauss - seidel.html">Gauss - seidel</a></li>
+          
+
+        </ul>
+    </nav>
+
+
+
+
+    <section>
+<div class="titulo"> Regresion lineal  </div>
+
+<div class="form">
+    <form  autocomplete="off">
+        <input type="text" name="x" id="xEl" > 
+        <label class="lbl"> <span class="txt">X</span> </label>
+       
+        <input type="text" name="fx" id="fxEl" >
+        <label class="lbl" > <span class="txt">FX</span> </label>
+    
+        <button>ingresar valores</button>
+    </form>
+</div>
+
+<table>
+  <thead>
+    <tr>
+      <th>x</th>
+      <th>fx</th>
+    </tr>  
+  </thead>
+  <tbody>
+  
+
+  </tbody>
+</table>
+
+
+<div class="bus">
+    <input type="text" name="x" id="xb" placeholder="x bus" size="10" autocomplete="off">
+    <button onclick="calcular()">calcular</button>
+
+
+  </div>
+
+<style>
+
+.titulo{
+    display: flex;
+    justify-content: center;
+    font-family: 'Times New Roman', Times, serif;
+    font-size: xx-large;
+}
+
+.form{
+    display: flex;
+    justify-content: center;
+}
+
+.form input{
+    border: none;
+    outline: none;
+}
+
+
+table,
+  form {
+    width: 500px;
+    margin: 20px auto;
+  }
+  table {
+    border-collapse: collapse;
+    text-align: center;
+    background-color: rgba(255, 255, 255, .75);
+  }
+  table td,
+  table th {
+    border: solid 1px white;
+  }
+
+  table td{
+    color: rgb(59, 59, 59);
+  }
+
+  .bus{
+    display: flex;
+    justify-content: center;
+  }
+
+</style>
+
+
+<script type="text/javascript">
+
+const form = document.querySelector('form');
+const tbodyEl = document.querySelector('tbody');
+const tableEl = document.querySelector('table');
+
+var n = -1;
+var w = 0;
+var h = 0;
+var p = 1;
+
+function captura(e){
+
+    e.preventDefault();
+
+    const xEl = parseFloat(document.getElementById("xEl").value)
+    const fxEl = parseFloat(document.getElementById("fxEl").value)
+
+    tbodyEl.innerHTML += `
+        <tr>
+            <td id="x${w}">${xEl}</td>
+            <td id="fx${w}">${fxEl}</td>
+         </tr>
+    `;
+    h=h+2
+    p=p+2
+ 
+}
+
+form.addEventListener("submit", captura);
+
+ function calcular(){
+    var xb = parseFloat(document.getElementById("xb").value);
+        
+    const valores = document.getElementsByTagName("td");
+
+    let X = [
+        
+    ]
+    let fX = [
+        
+    ]
+
+    let q = 0
+    while (q < h){ 
+    X.push(Number(valores[q].innerHTML))
+    q=q+2
+    }
+   
+   
+    let t = 1
+    while (t < p){ 
+    fX.push(Number(valores[t].innerHTML))
+    t=t+2
+    }
+
+    const acumular = (acumulador,numero) => acumulador + numero;
+    let sumX = X.reduce(acumular,0);
+    let sumfX = fX.reduce(acumular,0);
+
+    let Xmed = sumX / X.length
+    let fXmed = sumfX / fX.length
+
+    let Xcuad = X.map(function(Q){
+        return Q * Q   
+    })
+
+    let fXcuad = fX.map(function(fQ){
+        return fQ * fQ
+    })
+
+    let sumXcuad = Xcuad.reduce(acumular,0);
+    let XmedCuad = Xmed * Xmed
+
+    let XfX = []
+
+    let r = 0
+    while (r < X.length){ 
+    XfX.push(X[r] * fX[r])
+    r++
+    }
+
+    let sumXfX = XfX.reduce(acumular,0);
+
+    let b = (sumXfX - (X.length * Xmed * fXmed)) / (sumXcuad - (X.length * XmedCuad))
+
+    let a = fXmed - (b * Xmed)
+
+    let Y = a + (b * xb)
+
+   
+    alert(Y)
+ }
+
+</script>
+
+
+
+
+
+    </section>
+</body>
+</html>
